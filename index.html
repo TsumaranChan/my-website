@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SunRise Eikaiwa — English Conversation School</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50:'#fff7ed',100:'#ffedd5',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c' },
+            sky:   { 50:'#f0f9ff',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1',900:'#0c4a6e' }
+          },
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    .nav-link { position: relative; }
+    .nav-link::after { content:''; position:absolute; bottom:-2px; left:0; width:0; height:2px; background:#f97316; transition:width 0.3s ease; }
+    .nav-link:hover::after { width:100%; }
+    .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .card-hover:hover { transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,0.12); }
+    .fade-in { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity:1; transform:translateY(0); }
+    .hero-blob { background:radial-gradient(ellipse at 60% 40%, rgba(249,115,22,0.18) 0%, rgba(14,165,233,0.12) 60%, transparent 100%); }
+    .marquee-track { display:flex; animation:marquee 28s linear infinite; }
+    @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .faq-answer { max-height:0; overflow:hidden; transition:max-height 0.4s ease; }
+    .faq-answer.open { max-height:400px; }
+    .faq-icon { transition:transform 0.3s ease; }
+    .faq-icon.open { transform:rotate(45deg); }
+    .lang-btn-active { background:#f97316; color:#fff; }
+    .lang-btn-inactive { background:transparent; color:#6b7280; }
+    .lang-btn-inactive:hover { color:#111827; }
+  </style>
+</head>
+<body class="font-sans bg-white text-gray-800 antialiased">
+
+<!-- ── NAVBAR ── -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <a href="#" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-sky-500 flex items-center justify-center shadow">
+          <span class="text-white font-extrabold text-sm">SR</span>
+        </div>
+        <span class="font-bold text-lg text-gray-900 hidden sm:block">SunRise <span class="text-brand-500">Eikaiwa</span></span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-7">
+        <a href="#about"    class="nav-link text-sm font-medium text-gray-600 hover:text-gray-900" data-i18n="nav_about">About</a>
+        <a href="#classes"  class="nav-link text-sm font-medium text-gray-600 hover:text-gray-900" data-i18n="nav_classes">Classes</a>
+        <a href="#teachers" class="nav-link text-sm font-medium text-gray-600 hover:text-gray-900" data-i18n="nav_teachers">Teachers</a>
+        <a href="#pricing"  class="nav-link text-sm font-medium text-gray-600 hover:text-gray-900" data-i18n="nav_pricing">Pricing</a>
+        <a href="#faq"      class="nav-link text-sm font-medium text-gray-600 hover:text-gray-900" data-i18n="nav_faq">FAQ</a>
+        <a href="#contact"  class="nav-link text-sm font-medium text-gray-600 hover:text-gray-900" data-i18n="nav_contact">Contact</a>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Language switcher -->
+        <div class="flex items-center border border-gray-200 rounded-full overflow-hidden text-xs font-bold">
+          <button id="lang-en" class="px-3 py-1.5 transition-colors lang-btn-active" onclick="setLang('en')">EN</button>
+          <button id="lang-ja" class="px-3 py-1.5 transition-colors lang-btn-inactive" onclick="setLang('ja')">日本語</button>
+        </div>
+        <a href="#contact" class="hidden sm:inline-flex items-center gap-1.5 bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors shadow-sm" data-i18n="nav_trial">Free Trial Lesson</a>
+        <button id="burger" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100">
+          <svg id="burger-open" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg id="burger-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 py-4 space-y-3">
+    <a href="#about"    class="block text-sm font-medium text-gray-700 hover:text-brand-500 py-1" data-i18n="nav_about">About</a>
+    <a href="#classes"  class="block text-sm font-medium text-gray-700 hover:text-brand-500 py-1" data-i18n="nav_classes">Classes</a>
+    <a href="#teachers" class="block text-sm font-medium text-gray-700 hover:text-brand-500 py-1" data-i18n="nav_teachers">Teachers</a>
+    <a href="#pricing"  class="block text-sm font-medium text-gray-700 hover:text-brand-500 py-1" data-i18n="nav_pricing">Pricing</a>
+    <a href="#faq"      class="block text-sm font-medium text-gray-700 hover:text-brand-500 py-1" data-i18n="nav_faq">FAQ</a>
+    <a href="#contact"  class="block text-sm font-medium text-gray-700 hover:text-brand-500 py-1" data-i18n="nav_contact">Contact</a>
+    <a href="#contact"  class="block w-full text-center bg-brand-500 hover:bg-brand-600 text-white text-sm font-semibold px-4 py-2.5 rounded-full transition-colors" data-i18n="nav_trial">Free Trial Lesson</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="relative min-h-screen flex items-center hero-blob pt-16 overflow-hidden">
+  <div class="absolute top-20 right-10 w-72 h-72 rounded-full bg-brand-100 opacity-40 blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-20 left-10 w-60 h-60 rounded-full bg-sky-100 opacity-50 blur-3xl pointer-events-none"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 grid lg:grid-cols-2 gap-12 items-center">
+    <div class="fade-in">
+      <span class="inline-block bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5" data-i18n="hero_tag">英会話スクール · Eikaiwa School</span>
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-gray-900 leading-tight" data-i18n-html="hero_h1">Speak English<br/><span class="text-brand-500">with Confidence.</span></h1>
+      <p class="mt-6 text-lg text-gray-500 max-w-lg leading-relaxed" data-i18n="hero_sub">Small classes, native-speaking teachers, and a warm atmosphere — SunRise Eikaiwa helps students of every level find their voice in English.</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#contact" class="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-3.5 rounded-full text-base transition-all shadow-md hover:shadow-lg">
+          <span data-i18n="hero_cta1">Book a Free Trial</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <a href="#classes" class="inline-flex items-center gap-2 border-2 border-gray-200 hover:border-brand-400 text-gray-700 hover:text-brand-600 font-semibold px-6 py-3.5 rounded-full text-base transition-all" data-i18n="hero_cta2">View Classes</a>
+      </div>
+      <div class="mt-12 flex flex-wrap gap-8">
+        <div>
+          <p class="text-3xl font-extrabold text-gray-900">500+</p>
+          <p class="text-sm text-gray-500 mt-0.5" data-i18n="hero_stat1_label">Students enrolled</p>
+        </div>
+        <div class="border-l border-gray-200 pl-8">
+          <p class="text-3xl font-extrabold text-gray-900">12</p>
+          <p class="text-sm text-gray-500 mt-0.5" data-i18n="hero_stat2_label">Native teachers</p>
+        </div>
+        <div class="border-l border-gray-200 pl-8">
+          <p class="text-3xl font-extrabold text-gray-900">15yr</p>
+          <p class="text-sm text-gray-500 mt-0.5" data-i18n="hero_stat3_label">In business</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade-in hidden lg:flex justify-center items-center" style="transition-delay:0.15s">
+      <div class="relative w-full max-w-md aspect-square">
+        <div class="absolute inset-0 bg-gradient-to-br from-sky-400 to-brand-400 rounded-3xl rotate-3 opacity-20"></div>
+        <div class="relative bg-white rounded-3xl shadow-2xl p-8 flex flex-col gap-5">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold flex-shrink-0">T</div>
+            <div class="bg-sky-50 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-gray-700 max-w-xs shadow-sm" data-i18n="chat_t1">Good morning! How was your weekend?</div>
+          </div>
+          <div class="flex items-start gap-3 flex-row-reverse">
+            <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 font-bold flex-shrink-0">S</div>
+            <div class="bg-brand-50 rounded-2xl rounded-tr-none px-4 py-3 text-sm text-gray-700 max-w-xs shadow-sm" data-i18n="chat_s1">It was great! I went to Kamakura — the weather was perfect!</div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center text-sky-600 font-bold flex-shrink-0">T</div>
+            <div class="bg-sky-50 rounded-2xl rounded-tl-none px-4 py-3 text-sm text-gray-700 max-w-xs shadow-sm" data-i18n="chat_t2">Wonderful! Let's talk more about that — tell me what you saw!</div>
+          </div>
+          <div class="mt-2 flex items-center gap-2 border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-400">
+            <span class="flex-1" data-i18n="chat_placeholder">Type your reply...</span>
+            <div class="w-7 h-7 rounded-full bg-brand-500 flex items-center justify-center">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="bg-gray-50 border-y border-gray-100 py-5 overflow-hidden">
+  <div class="flex overflow-hidden">
+    <div class="marquee-track whitespace-nowrap">
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_toeic">⭐ TOEIC Prep</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_kids">⭐ Kids English</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_biz">⭐ Business English</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_eiken">⭐ Eiken Support</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_conv">⭐ Conversation Classes</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_online">⭐ Online Lessons</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_private">⭐ Private Tutoring</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_toeic">⭐ TOEIC Prep</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_kids">⭐ Kids English</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_biz">⭐ Business English</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_eiken">⭐ Eiken Support</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_conv">⭐ Conversation Classes</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_online">⭐ Online Lessons</span>
+      <span class="inline-flex items-center gap-2 px-8 text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="marquee_private">⭐ Private Tutoring</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      <div class="fade-in grid grid-cols-2 gap-4">
+        <div class="col-span-2 rounded-2xl bg-gradient-to-br from-sky-500 to-sky-600 p-8 text-white flex flex-col justify-end min-h-[200px] shadow-lg">
+          <p class="text-3xl font-extrabold" data-i18n="about_stat1">15 Years</p>
+          <p class="text-sky-200 mt-1 text-sm" data-i18n="about_stat1_sub">of helping Japan speak English</p>
+        </div>
+        <div class="rounded-2xl bg-brand-500 p-6 text-white flex flex-col justify-end min-h-[140px] shadow">
+          <p class="text-2xl font-bold">500+</p>
+          <p class="text-brand-100 text-xs mt-1" data-i18n="about_stat2_sub">Happy students</p>
+        </div>
+        <div class="rounded-2xl bg-gray-900 p-6 text-white flex flex-col justify-end min-h-[140px] shadow">
+          <p class="text-2xl font-bold">4.9 ★</p>
+          <p class="text-gray-400 text-xs mt-1" data-i18n="about_stat3_sub">Average rating</p>
+        </div>
+      </div>
+      <div class="fade-in" style="transition-delay:0.1s">
+        <span class="inline-block bg-sky-50 text-sky-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="about_tag">About SunRise Eikaiwa</span>
+        <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight" data-i18n-html="about_h2">A school built on <span class="text-brand-500">real conversation</span></h2>
+        <p class="mt-5 text-gray-500 leading-relaxed" data-i18n="about_p1">Founded in 2010, SunRise Eikaiwa was born from a simple belief: the best way to learn English is to actually use it. Every class is designed around natural communication — not textbook drills.</p>
+        <p class="mt-4 text-gray-500 leading-relaxed" data-i18n="about_p2">Our small-group classes (max 6 students) mean you get plenty of speaking time, personal feedback, and a relaxed, judgement-free environment. Whether you're a shy beginner or preparing for TOEIC, we have a class for you.</p>
+        <ul class="mt-6 space-y-3">
+          <li class="flex items-center gap-3 text-sm text-gray-700"><span class="w-5 h-5 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center flex-shrink-0">✓</span><span data-i18n="about_li1">Native English-speaking teachers from the US, UK, Canada, and Australia</span></li>
+          <li class="flex items-center gap-3 text-sm text-gray-700"><span class="w-5 h-5 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center flex-shrink-0">✓</span><span data-i18n="about_li2">Maximum 6 students per group class</span></li>
+          <li class="flex items-center gap-3 text-sm text-gray-700"><span class="w-5 h-5 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center flex-shrink-0">✓</span><span data-i18n="about_li3">In-person (Yokohama) and online lessons available</span></li>
+          <li class="flex items-center gap-3 text-sm text-gray-700"><span class="w-5 h-5 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center flex-shrink-0">✓</span><span data-i18n="about_li4">Free trial lesson for new students</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLASSES ── -->
+<section id="classes" class="py-24 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center fade-in">
+      <span class="inline-block bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="classes_tag">Our Programs</span>
+      <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900" data-i18n="classes_h2">Find your perfect class</h2>
+      <p class="mt-4 text-gray-500 max-w-xl mx-auto" data-i18n="classes_sub">From complete beginners to near-fluent speakers — we have courses designed for every level and goal.</p>
+    </div>
+
+    <div class="mt-10 flex flex-wrap justify-center gap-2" id="class-tabs">
+      <button data-tab="all"      class="tab-btn active-tab px-4 py-2 rounded-full text-sm font-semibold transition-all bg-brand-500 text-white shadow"                               data-i18n="tab_all">All</button>
+      <button data-tab="adults"   class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"          data-i18n="tab_adults">Adults</button>
+      <button data-tab="kids"     class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"          data-i18n="tab_kids">Kids</button>
+      <button data-tab="business" class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"          data-i18n="tab_business">Business</button>
+      <button data-tab="exam"     class="tab-btn px-4 py-2 rounded-full text-sm font-semibold transition-all bg-white text-gray-600 hover:bg-gray-100 border border-gray-200"          data-i18n="tab_exam">Exam Prep</button>
+    </div>
+
+    <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="class-grid">
+
+      <div class="class-card card-hover fade-in bg-white rounded-2xl p-6 shadow-sm border border-gray-100" data-category="adults">
+        <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-2xl mb-4">💬</div>
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="class1_title">General Conversation</h3>
+        <p class="text-sm text-gray-500 mt-2 leading-relaxed" data-i18n="class1_desc">Build fluency and confidence through natural, topic-based discussions. Great for beginners to intermediate learners.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="bg-sky-50 text-sky-700 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class1_tag1">All levels</span>
+          <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class1_tag2">Group · max 6</span>
+        </div>
+        <p class="mt-4 text-xs text-gray-400" data-i18n="class1_time">Mon / Wed / Fri — 19:00–20:00</p>
+      </div>
+
+      <div class="class-card card-hover fade-in bg-white rounded-2xl p-6 shadow-sm border border-gray-100" data-category="business" style="transition-delay:0.05s">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-2xl mb-4">💼</div>
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="class2_title">Business English</h3>
+        <p class="text-sm text-gray-500 mt-2 leading-relaxed" data-i18n="class2_desc">Presentations, emails, meetings, and negotiations. Practical English for working professionals.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="bg-brand-50 text-brand-700 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class2_tag1">Intermediate+</span>
+          <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class2_tag2">Group · max 6</span>
+        </div>
+        <p class="mt-4 text-xs text-gray-400" data-i18n="class2_time">Tue / Thu — 19:00–20:00</p>
+      </div>
+
+      <div class="class-card card-hover fade-in bg-white rounded-2xl p-6 shadow-sm border border-gray-100" data-category="kids" style="transition-delay:0.1s">
+        <div class="w-12 h-12 rounded-xl bg-yellow-100 text-yellow-600 flex items-center justify-center text-2xl mb-4">🌈</div>
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="class3_title">Kids English</h3>
+        <p class="text-sm text-gray-500 mt-2 leading-relaxed" data-i18n="class3_desc">Songs, games, stories, and crafts that make learning English fun for children ages 4–12.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="bg-yellow-50 text-yellow-700 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class3_tag1">Ages 4–12</span>
+          <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class3_tag2">Group · max 6</span>
+        </div>
+        <p class="mt-4 text-xs text-gray-400" data-i18n="class3_time">Sat / Sun — 10:00 / 11:00 / 13:00</p>
+      </div>
+
+      <div class="class-card card-hover fade-in bg-white rounded-2xl p-6 shadow-sm border border-gray-100" data-category="exam" style="transition-delay:0.05s">
+        <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-4">📝</div>
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="class4_title">TOEIC Preparation</h3>
+        <p class="text-sm text-gray-500 mt-2 leading-relaxed" data-i18n="class4_desc">Targeted practice for TOEIC L&amp;R. Strategy, vocabulary, and timed drills to boost your score fast.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="bg-purple-50 text-purple-700 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class4_tag1">Intermediate+</span>
+          <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class4_tag2">Group · max 6</span>
+        </div>
+        <p class="mt-4 text-xs text-gray-400" data-i18n="class4_time">Sat — 14:00–16:00</p>
+      </div>
+
+      <div class="class-card card-hover fade-in bg-white rounded-2xl p-6 shadow-sm border border-gray-100" data-category="exam" style="transition-delay:0.1s">
+        <div class="w-12 h-12 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-2xl mb-4">🎓</div>
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="class5_title">Eiken Support</h3>
+        <p class="text-sm text-gray-500 mt-2 leading-relaxed" data-i18n="class5_desc">Comprehensive prep for Eiken Pre-2 through Grade 1, including interview practice with a native teacher.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="bg-green-50 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class5_tag1">All grades</span>
+          <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class5_tag2">Private / group</span>
+        </div>
+        <p class="mt-4 text-xs text-gray-400" data-i18n="class5_time">Flexible scheduling</p>
+      </div>
+
+      <div class="class-card card-hover fade-in bg-white rounded-2xl p-6 shadow-sm border border-gray-100" data-category="adults" style="transition-delay:0.15s">
+        <div class="w-12 h-12 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center text-2xl mb-4">🎯</div>
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="class6_title">Private Lessons</h3>
+        <p class="text-sm text-gray-500 mt-2 leading-relaxed" data-i18n="class6_desc">100% customised one-on-one sessions. Perfect for specific goals, interview prep, or accelerated progress.</p>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="bg-pink-50 text-pink-700 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class6_tag1">All levels</span>
+          <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full" data-i18n="class6_tag2">1-on-1</span>
+        </div>
+        <p class="mt-4 text-xs text-gray-400" data-i18n="class6_time">Flexible scheduling</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── TEACHERS ── -->
+<section id="teachers" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center fade-in">
+      <span class="inline-block bg-sky-50 text-sky-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="teachers_tag">Our Team</span>
+      <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900" data-i18n="teachers_h2">Meet your teachers</h2>
+      <p class="mt-4 text-gray-500 max-w-xl mx-auto" data-i18n="teachers_sub">All of our teachers are native English speakers with formal teaching qualifications and a love of helping students grow.</p>
+    </div>
+    <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <div class="fade-in card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm text-center pb-6">
+        <div class="h-32 bg-gradient-to-br from-sky-400 to-sky-600 relative">
+          <div class="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl absolute -bottom-10 left-1/2 -translate-x-1/2">👩‍🏫</div>
+        </div>
+        <div class="mt-14 px-4">
+          <h3 class="font-bold text-gray-900">Sarah Mitchell</h3>
+          <p class="text-brand-500 text-sm font-medium">🇺🇸 <span data-i18n="teacher1_from">from California</span></p>
+          <p class="text-gray-400 text-xs mt-2 leading-relaxed" data-i18n="teacher1_bio">CELTA certified · 8 years in Japan · Loves hiking &amp; anime</p>
+          <div class="mt-3 flex flex-wrap justify-center gap-1">
+            <span class="bg-sky-50 text-sky-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class1_title">Conversation</span>
+            <span class="bg-sky-50 text-sky-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class2_title">Business</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm text-center pb-6" style="transition-delay:0.07s">
+        <div class="h-32 bg-gradient-to-br from-brand-400 to-brand-600 relative">
+          <div class="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl absolute -bottom-10 left-1/2 -translate-x-1/2">👨‍🏫</div>
+        </div>
+        <div class="mt-14 px-4">
+          <h3 class="font-bold text-gray-900">James O'Brien</h3>
+          <p class="text-brand-500 text-sm font-medium">🇬🇧 <span data-i18n="teacher2_from">from London</span></p>
+          <p class="text-gray-400 text-xs mt-2 leading-relaxed" data-i18n="teacher2_bio">MA in Education · 12 years teaching · Tea enthusiast</p>
+          <div class="mt-3 flex flex-wrap justify-center gap-1">
+            <span class="bg-brand-50 text-brand-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class4_title">TOEIC</span>
+            <span class="bg-brand-50 text-brand-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class5_title">Eiken</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm text-center pb-6" style="transition-delay:0.14s">
+        <div class="h-32 bg-gradient-to-br from-green-400 to-green-600 relative">
+          <div class="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl absolute -bottom-10 left-1/2 -translate-x-1/2">👩‍🏫</div>
+        </div>
+        <div class="mt-14 px-4">
+          <h3 class="font-bold text-gray-900">Emily Chan</h3>
+          <p class="text-brand-500 text-sm font-medium">🇨🇦 <span data-i18n="teacher3_from">from Vancouver</span></p>
+          <p class="text-gray-400 text-xs mt-2 leading-relaxed" data-i18n="teacher3_bio">Early Childhood Ed · 6 years · Loves cooking &amp; J-pop</p>
+          <div class="mt-3 flex flex-wrap justify-center gap-1">
+            <span class="bg-green-50 text-green-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class3_title">Kids</span>
+            <span class="bg-green-50 text-green-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class1_title">Conversation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in card-hover bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm text-center pb-6" style="transition-delay:0.21s">
+        <div class="h-32 bg-gradient-to-br from-purple-400 to-purple-600 relative">
+          <div class="w-20 h-20 rounded-full bg-white border-4 border-white shadow-lg flex items-center justify-center text-4xl absolute -bottom-10 left-1/2 -translate-x-1/2">👨‍🏫</div>
+        </div>
+        <div class="mt-14 px-4">
+          <h3 class="font-bold text-gray-900">Tom Nguyen</h3>
+          <p class="text-brand-500 text-sm font-medium">🇦🇺 <span data-i18n="teacher4_from">from Sydney</span></p>
+          <p class="text-gray-400 text-xs mt-2 leading-relaxed" data-i18n="teacher4_bio">TESOL certified · 5 years · Surfer &amp; video game fan</p>
+          <div class="mt-3 flex flex-wrap justify-center gap-1">
+            <span class="bg-purple-50 text-purple-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class2_title">Business</span>
+            <span class="bg-purple-50 text-purple-600 text-xs px-2 py-0.5 rounded-full" data-i18n="class6_title">Private</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="py-24 bg-gray-900 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center fade-in">
+      <span class="inline-block bg-white/10 text-gray-300 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="test_tag">Student Stories</span>
+      <h2 class="text-4xl sm:text-5xl font-extrabold" data-i18n="test_h2">What our students say</h2>
+    </div>
+    <div class="mt-12 grid md:grid-cols-3 gap-6">
+
+      <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+        <div class="flex gap-1 mb-4"><span class="text-yellow-400">★★★★★</span></div>
+        <p class="text-gray-300 text-sm leading-relaxed" data-i18n="test1_text">"I was terrified to speak English before I joined SunRise. After 6 months I gave a presentation in English at work. The teachers are so patient and encouraging!"</p>
+        <div class="mt-5 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-brand-500 flex items-center justify-center text-sm font-bold">YS</div>
+          <div>
+            <p class="font-semibold text-sm">Yuki S.</p>
+            <p class="text-gray-400 text-xs" data-i18n="test1_role">Nurse · 2 years with SunRise</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors" style="transition-delay:0.08s">
+        <div class="flex gap-1 mb-4"><span class="text-yellow-400">★★★★★</span></div>
+        <p class="text-gray-300 text-sm leading-relaxed" data-i18n="test2_text">"My son went from hating English class to actually looking forward to Saturdays. Emily-sensei makes everything into a game. He's been here 3 years now!"</p>
+        <div class="mt-5 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-sky-500 flex items-center justify-center text-sm font-bold">KM</div>
+          <div>
+            <p class="font-semibold text-sm">Keiko M.</p>
+            <p class="text-gray-400 text-xs" data-i18n="test2_role">Parent · Kids class student</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors" style="transition-delay:0.16s">
+        <div class="flex gap-1 mb-4"><span class="text-yellow-400">★★★★★</span></div>
+        <p class="text-gray-300 text-sm leading-relaxed" data-i18n="test3_text">"James-sensei's TOEIC class is incredibly focused. I went from 640 to 845 in just 4 months. The mock tests and detailed feedback made the difference."</p>
+        <div class="mt-5 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-full bg-green-500 flex items-center justify-center text-sm font-bold">HT</div>
+          <div>
+            <p class="font-semibold text-sm">Hiroshi T.</p>
+            <p class="text-gray-400 text-xs" data-i18n="test3_role">Engineer · TOEIC class</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center fade-in">
+      <span class="inline-block bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="pricing_tag">Simple Pricing</span>
+      <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900" data-i18n="pricing_h2">Transparent plans, no hidden fees</h2>
+      <p class="mt-4 text-gray-500 max-w-xl mx-auto" data-i18n="pricing_sub">All plans include access to our student portal, lesson materials, and a free placement test.</p>
+    </div>
+
+    <div class="mt-12 grid sm:grid-cols-3 gap-8 max-w-4xl mx-auto">
+
+      <div class="fade-in card-hover border border-gray-200 rounded-2xl p-7 flex flex-col">
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="plan1_name">Starter</h3>
+        <p class="text-gray-400 text-sm mt-1" data-i18n="plan1_desc">4 group lessons / month</p>
+        <div class="mt-5"><span class="text-4xl font-extrabold text-gray-900">¥8,800</span><span class="text-gray-400 text-sm" data-i18n="per_month"> / month</span></div>
+        <ul class="mt-6 space-y-3 flex-1">
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan1_li1">4 x 60-min group classes</span></li>
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan1_li2">Student portal access</span></li>
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan1_li3">Digital materials included</span></li>
+          <li class="flex items-center gap-2 text-sm text-gray-300"><span class="text-gray-200">✕</span><span data-i18n="plan_makeup">Make-up lessons</span></li>
+        </ul>
+        <a href="#contact" class="mt-8 block text-center border-2 border-gray-200 hover:border-brand-400 hover:text-brand-600 text-gray-700 font-semibold py-2.5 rounded-full text-sm transition-all" data-i18n="pricing_cta">Get Started</a>
+      </div>
+
+      <div class="fade-in card-hover bg-brand-500 rounded-2xl p-7 flex flex-col text-white relative shadow-xl" style="transition-delay:0.08s">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-bold px-4 py-1 rounded-full whitespace-nowrap" data-i18n="plan2_badge">Most Popular</div>
+        <h3 class="font-bold text-lg" data-i18n="plan2_name">Standard</h3>
+        <p class="text-brand-200 text-sm mt-1" data-i18n="plan2_desc">8 group lessons / month</p>
+        <div class="mt-5"><span class="text-4xl font-extrabold">¥15,400</span><span class="text-brand-200 text-sm" data-i18n="per_month"> / month</span></div>
+        <ul class="mt-6 space-y-3 flex-1">
+          <li class="flex items-center gap-2 text-sm"><span class="text-white/80">✓</span><span data-i18n="plan2_li1">8 x 60-min group classes</span></li>
+          <li class="flex items-center gap-2 text-sm"><span class="text-white/80">✓</span><span data-i18n="plan2_li2">Student portal access</span></li>
+          <li class="flex items-center gap-2 text-sm"><span class="text-white/80">✓</span><span data-i18n="plan2_li3">Digital materials included</span></li>
+          <li class="flex items-center gap-2 text-sm"><span class="text-white/80">✓</span><span data-i18n="plan2_li4">1 make-up lesson / month</span></li>
+        </ul>
+        <a href="#contact" class="mt-8 block text-center bg-white text-brand-600 hover:bg-brand-50 font-semibold py-2.5 rounded-full text-sm transition-all shadow" data-i18n="pricing_cta">Get Started</a>
+      </div>
+
+      <div class="fade-in card-hover border border-gray-200 rounded-2xl p-7 flex flex-col" style="transition-delay:0.16s">
+        <h3 class="font-bold text-lg text-gray-900" data-i18n="plan3_name">Premium</h3>
+        <p class="text-gray-400 text-sm mt-1" data-i18n="plan3_desc">Unlimited + private lessons</p>
+        <div class="mt-5"><span class="text-4xl font-extrabold text-gray-900">¥28,000</span><span class="text-gray-400 text-sm" data-i18n="per_month"> / month</span></div>
+        <ul class="mt-6 space-y-3 flex-1">
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan3_li1">Unlimited group classes</span></li>
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan3_li2">2 x private lessons / month</span></li>
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan3_li3">Priority scheduling</span></li>
+          <li class="flex items-center gap-2 text-sm text-gray-600"><span class="text-green-500">✓</span><span data-i18n="plan3_li4">Unlimited make-up lessons</span></li>
+        </ul>
+        <a href="#contact" class="mt-8 block text-center border-2 border-gray-200 hover:border-brand-400 hover:text-brand-600 text-gray-700 font-semibold py-2.5 rounded-full text-sm transition-all" data-i18n="pricing_cta">Get Started</a>
+      </div>
+
+    </div>
+    <p class="text-center text-gray-400 text-sm mt-6" data-i18n="pricing_note">All prices include tax. Registration fee: ¥5,500 (waived for online sign-ups this month).</p>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq" class="py-24 bg-gray-50">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center fade-in">
+      <span class="inline-block bg-sky-50 text-sky-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="faq_tag">FAQ</span>
+      <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900" data-i18n="faq_h2">Common questions</h2>
+    </div>
+    <div class="mt-10 space-y-3">
+
+      <div class="faq-item fade-in bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <button class="faq-trigger w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-brand-600 transition-colors">
+          <span data-i18n="faq1_q">Do I need any English ability to join?</span>
+          <span class="faq-icon text-brand-500 text-xl font-light flex-shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-answer"><p class="px-5 pb-5 text-sm text-gray-500 leading-relaxed" data-i18n="faq1_a">No! We have classes from complete beginner level. We'll give you a free placement test before your first class so we can put you in the right group.</p></div>
+      </div>
+
+      <div class="faq-item fade-in bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" style="transition-delay:0.05s">
+        <button class="faq-trigger w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-brand-600 transition-colors">
+          <span data-i18n="faq2_q">Are lessons available online?</span>
+          <span class="faq-icon text-brand-500 text-xl font-light flex-shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-answer"><p class="px-5 pb-5 text-sm text-gray-500 leading-relaxed" data-i18n="faq2_a">Yes! All of our classes are available online via Zoom. Online students get the same experience, materials, and teacher interaction as in-person students.</p></div>
+      </div>
+
+      <div class="faq-item fade-in bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" style="transition-delay:0.1s">
+        <button class="faq-trigger w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-brand-600 transition-colors">
+          <span data-i18n="faq3_q">What happens if I miss a lesson?</span>
+          <span class="faq-icon text-brand-500 text-xl font-light flex-shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-answer"><p class="px-5 pb-5 text-sm text-gray-500 leading-relaxed" data-i18n="faq3_a">Standard and Premium plan students can book make-up lessons. Starter students can purchase make-up credits at ¥2,200 each. We ask for 24-hour notice when possible.</p></div>
+      </div>
+
+      <div class="faq-item fade-in bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" style="transition-delay:0.15s">
+        <button class="faq-trigger w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-brand-600 transition-colors">
+          <span data-i18n="faq4_q">How do I book the free trial lesson?</span>
+          <span class="faq-icon text-brand-500 text-xl font-light flex-shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-answer"><p class="px-5 pb-5 text-sm text-gray-500 leading-relaxed" data-i18n="faq4_a">Just fill in the contact form below and select "Free Trial" as the subject. We'll email you within 24 hours to confirm your time slot. No payment is needed in advance.</p></div>
+      </div>
+
+      <div class="faq-item fade-in bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" style="transition-delay:0.2s">
+        <button class="faq-trigger w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-brand-600 transition-colors">
+          <span data-i18n="faq5_q">Can I cancel or change my plan?</span>
+          <span class="faq-icon text-brand-500 text-xl font-light flex-shrink-0 ml-4">+</span>
+        </button>
+        <div class="faq-answer"><p class="px-5 pb-5 text-sm text-gray-500 leading-relaxed" data-i18n="faq5_a">You can upgrade, downgrade, or cancel with one month's notice. There are no long-term contracts — we want students who stay because they love the classes, not because they're locked in.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+      <div class="fade-in">
+        <span class="inline-block bg-brand-100 text-brand-700 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" data-i18n="contact_tag">Get In Touch</span>
+        <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight" data-i18n-html="contact_h2">Book your <span class="text-brand-500">free trial</span> today</h2>
+        <p class="mt-5 text-gray-500 leading-relaxed max-w-md" data-i18n="contact_sub">Come and experience what makes SunRise different. No pressure, no commitment — just a fun 60-minute class on us.</p>
+        <div class="mt-8 space-y-5">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-lg flex-shrink-0">📍</div>
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="contact_loc_label">Location</p>
+              <p class="text-gray-500 text-sm" data-i18n-html="contact_loc_addr">3-chome-1-1 Minatomirai, Nishi Ward<br/>Yokohama, Kanagawa 220-0012</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg flex-shrink-0">📞</div>
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="contact_phone_label">Phone</p>
+              <p class="text-gray-500 text-sm">045-000-1234</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-lg flex-shrink-0">✉️</div>
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="contact_email_label">Email</p>
+              <p class="text-gray-500 text-sm">hello@sunrise-eikaiwa.jp</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-lg flex-shrink-0">🕐</div>
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="contact_hours_label">School Hours</p>
+              <p class="text-gray-500 text-sm" data-i18n-html="contact_hours">Mon–Fri: 10:00–21:00<br/>Sat–Sun: 9:00–18:00</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-in" style="transition-delay:0.1s">
+        <form id="contact-form" class="bg-gray-50 rounded-2xl p-7 sm:p-8 shadow-sm border border-gray-100 space-y-5">
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1.5"><span data-i18n="form_fname">First Name</span> <span class="text-brand-500">*</span></label>
+              <input type="text" required data-i18n-placeholder="form_fname_ph" placeholder="Yuki" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1.5"><span data-i18n="form_lname">Last Name</span> <span class="text-brand-500">*</span></label>
+              <input type="text" required data-i18n-placeholder="form_lname_ph" placeholder="Tanaka" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"><span data-i18n="form_email">Email</span> <span class="text-brand-500">*</span></label>
+            <input type="email" required placeholder="yuki@example.com" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5" data-i18n="form_phone">Phone (optional)</label>
+            <input type="tel" placeholder="090-0000-0000" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5"><span data-i18n="form_interest">I'm interested in</span> <span class="text-brand-500">*</span></label>
+            <select required class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white text-gray-700">
+              <option value="" data-i18n="form_select">Select a class...</option>
+              <option data-i18n="form_opt_trial">Free Trial Lesson</option>
+              <option data-i18n="form_opt_conv">General Conversation</option>
+              <option data-i18n="form_opt_biz">Business English</option>
+              <option data-i18n="form_opt_kids">Kids English</option>
+              <option data-i18n="form_opt_toeic">TOEIC Preparation</option>
+              <option data-i18n="form_opt_eiken">Eiken Support</option>
+              <option data-i18n="form_opt_private">Private Lessons</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-1.5" data-i18n="form_message">Message</label>
+            <textarea rows="3" data-i18n-placeholder="form_msg_ph" placeholder="Tell us a bit about your English goals..." class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400 bg-white resize-none"></textarea>
+          </div>
+          <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-full text-sm transition-all shadow-md" data-i18n="form_submit">Send Message</button>
+          <div id="form-success" class="hidden text-center text-green-600 text-sm font-semibold py-2" data-i18n="form_success">✅ Thanks! We'll be in touch within 24 hours.</div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="bg-gray-900 text-gray-400 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+      <div class="sm:col-span-2 lg:col-span-1">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-sky-500 flex items-center justify-center shadow">
+            <span class="text-white font-extrabold text-sm">SR</span>
+          </div>
+          <span class="font-bold text-white text-lg">SunRise <span class="text-brand-400">Eikaiwa</span></span>
+        </div>
+        <p class="text-sm leading-relaxed max-w-xs" data-i18n="footer_tagline">Where every student finds their voice. Native speakers, small classes, and a warm community in Yokohama since 2010.</p>
+        <div class="flex gap-3 mt-5">
+          <a href="#" class="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-500 flex items-center justify-center transition-colors text-sm">f</a>
+          <a href="#" class="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-500 flex items-center justify-center transition-colors text-xs">ig</a>
+          <a href="#" class="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-500 flex items-center justify-center transition-colors text-xs">LINE</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-semibold text-white text-sm mb-4" data-i18n="footer_school">School</h4>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="#about"    class="hover:text-white transition-colors" data-i18n="footer_about">About Us</a></li>
+          <li><a href="#teachers" class="hover:text-white transition-colors" data-i18n="footer_teachers">Our Teachers</a></li>
+          <li><a href="#classes"  class="hover:text-white transition-colors" data-i18n="nav_classes">Classes</a></li>
+          <li><a href="#pricing"  class="hover:text-white transition-colors" data-i18n="nav_pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-white text-sm mb-4" data-i18n="footer_learn">Learn</h4>
+        <ul class="space-y-2.5 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer_resources">Free Resources</a></li>
+          <li><a href="#" class="hover:text-white transition-colors" data-i18n="footer_blog">Student Blog</a></li>
+          <li><a href="#faq" class="hover:text-white transition-colors" data-i18n="nav_faq">FAQ</a></li>
+          <li><a href="#contact" class="hover:text-white transition-colors" data-i18n="footer_trial">Book a Trial</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold text-white text-sm mb-4" data-i18n="nav_contact">Contact</h4>
+        <ul class="space-y-2.5 text-sm">
+          <li>045-000-1234</li>
+          <li>hello@sunrise-eikaiwa.jp</li>
+          <li class="leading-relaxed" data-i18n-html="footer_addr">3-chome-1-1 Minatomirai<br/>Yokohama, 220-0012</li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+      <p data-i18n="footer_copy">© 2025 SunRise Eikaiwa. All rights reserved.</p>
+      <div class="flex gap-5">
+        <a href="#" class="hover:text-white transition-colors" data-i18n="footer_privacy">Privacy Policy</a>
+        <a href="#" class="hover:text-white transition-colors" data-i18n="footer_terms">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" class="fixed bottom-6 right-6 w-11 h-11 rounded-full bg-brand-500 hover:bg-brand-600 text-white shadow-lg flex items-center justify-center transition-all opacity-0 pointer-events-none z-40">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+<script>
+// ── TRANSLATIONS ──
+const translations = {
+  en: {
+    nav_about:'About', nav_classes:'Classes', nav_teachers:'Teachers', nav_pricing:'Pricing',
+    nav_faq:'FAQ', nav_contact:'Contact', nav_trial:'Free Trial Lesson',
+    hero_tag:'英会話スクール · Eikaiwa School',
+    hero_h1:'Speak English<br/><span class="text-brand-500">with Confidence.</span>',
+    hero_sub:"Small classes, native-speaking teachers, and a warm atmosphere — SunRise Eikaiwa helps students of every level find their voice in English.",
+    hero_cta1:'Book a Free Trial', hero_cta2:'View Classes',
+    hero_stat1_label:'Students enrolled', hero_stat2_label:'Native teachers', hero_stat3_label:'In business',
+    chat_t1:'Good morning! How was your weekend?',
+    chat_s1:'It was great! I went to Kamakura — the weather was perfect!',
+    chat_t2:"Wonderful! Let's talk more about that — tell me what you saw!",
+    chat_placeholder:'Type your reply...',
+    marquee_toeic:'⭐ TOEIC Prep', marquee_kids:'⭐ Kids English', marquee_biz:'⭐ Business English',
+    marquee_eiken:'⭐ Eiken Support', marquee_conv:'⭐ Conversation Classes',
+    marquee_online:'⭐ Online Lessons', marquee_private:'⭐ Private Tutoring',
+    about_tag:'About SunRise Eikaiwa', about_stat1:'15 Years',
+    about_stat1_sub:'of helping Japan speak English', about_stat2_sub:'Happy students', about_stat3_sub:'Average rating',
+    about_h2:'A school built on <span class="text-brand-500">real conversation</span>',
+    about_p1:"Founded in 2010, SunRise Eikaiwa was born from a simple belief: the best way to learn English is to actually use it. Every class is designed around natural communication — not textbook drills.",
+    about_p2:"Our small-group classes (max 6 students) mean you get plenty of speaking time, personal feedback, and a relaxed, judgement-free environment. Whether you're a shy beginner or preparing for TOEIC, we have a class for you.",
+    about_li1:'Native English-speaking teachers from the US, UK, Canada, and Australia',
+    about_li2:'Maximum 6 students per group class',
+    about_li3:'In-person (Yokohama) and online lessons available',
+    about_li4:'Free trial lesson for new students',
+    classes_tag:'Our Programs', classes_h2:'Find your perfect class',
+    classes_sub:'From complete beginners to near-fluent speakers — we have courses designed for every level and goal.',
+    tab_all:'All', tab_adults:'Adults', tab_kids:'Kids', tab_business:'Business', tab_exam:'Exam Prep',
+    class1_title:'General Conversation',
+    class1_desc:'Build fluency and confidence through natural, topic-based discussions. Great for beginners to intermediate learners.',
+    class1_tag1:'All levels', class1_tag2:'Group · max 6', class1_time:'Mon / Wed / Fri — 19:00–20:00',
+    class2_title:'Business English',
+    class2_desc:'Presentations, emails, meetings, and negotiations. Practical English for working professionals.',
+    class2_tag1:'Intermediate+', class2_tag2:'Group · max 6', class2_time:'Tue / Thu — 19:00–20:00',
+    class3_title:'Kids English',
+    class3_desc:'Songs, games, stories, and crafts that make learning English fun for children ages 4–12.',
+    class3_tag1:'Ages 4–12', class3_tag2:'Group · max 6', class3_time:'Sat / Sun — 10:00 / 11:00 / 13:00',
+    class4_title:'TOEIC Preparation',
+    class4_desc:'Targeted practice for TOEIC L&R. Strategy, vocabulary, and timed drills to boost your score fast.',
+    class4_tag1:'Intermediate+', class4_tag2:'Group · max 6', class4_time:'Sat — 14:00–16:00',
+    class5_title:'Eiken Support',
+    class5_desc:'Comprehensive prep for Eiken Pre-2 through Grade 1, including interview practice with a native teacher.',
+    class5_tag1:'All grades', class5_tag2:'Private / group', class5_time:'Flexible scheduling',
+    class6_title:'Private Lessons',
+    class6_desc:'100% customised one-on-one sessions. Perfect for specific goals, interview prep, or accelerated progress.',
+    class6_tag1:'All levels', class6_tag2:'1-on-1', class6_time:'Flexible scheduling',
+    teachers_tag:'Our Team', teachers_h2:'Meet your teachers',
+    teachers_sub:'All of our teachers are native English speakers with formal teaching qualifications and a love of helping students grow.',
+    teacher1_from:'from California', teacher1_bio:'CELTA certified · 8 years in Japan · Loves hiking & anime',
+    teacher2_from:'from London',     teacher2_bio:'MA in Education · 12 years teaching · Tea enthusiast',
+    teacher3_from:'from Vancouver',  teacher3_bio:'Early Childhood Ed · 6 years · Loves cooking & J-pop',
+    teacher4_from:'from Sydney',     teacher4_bio:'TESOL certified · 5 years · Surfer & video game fan',
+    test_tag:'Student Stories', test_h2:'What our students say',
+    test1_text:'"I was terrified to speak English before I joined SunRise. After 6 months I gave a presentation in English at work. The teachers are so patient and encouraging!"',
+    test1_role:'Nurse · 2 years with SunRise',
+    test2_text:'"My son went from hating English class to actually looking forward to Saturdays. Emily-sensei makes everything into a game. He\'s been here 3 years now!"',
+    test2_role:'Parent · Kids class student',
+    test3_text:'"James-sensei\'s TOEIC class is incredibly focused. I went from 640 to 845 in just 4 months. The mock tests and detailed feedback made the difference."',
+    test3_role:'Engineer · TOEIC class',
+    pricing_tag:'Simple Pricing', pricing_h2:'Transparent plans, no hidden fees',
+    pricing_sub:'All plans include access to our student portal, lesson materials, and a free placement test.',
+    per_month:' / month',
+    plan1_name:'Starter', plan1_desc:'4 group lessons / month',
+    plan1_li1:'4 x 60-min group classes', plan1_li2:'Student portal access',
+    plan1_li3:'Digital materials included', plan_makeup:'Make-up lessons',
+    plan2_name:'Standard', plan2_badge:'Most Popular', plan2_desc:'8 group lessons / month',
+    plan2_li1:'8 x 60-min group classes', plan2_li2:'Student portal access',
+    plan2_li3:'Digital materials included', plan2_li4:'1 make-up lesson / month',
+    plan3_name:'Premium', plan3_desc:'Unlimited + private lessons',
+    plan3_li1:'Unlimited group classes', plan3_li2:'2 x private lessons / month',
+    plan3_li3:'Priority scheduling', plan3_li4:'Unlimited make-up lessons',
+    pricing_cta:'Get Started',
+    pricing_note:'All prices include tax. Registration fee: ¥5,500 (waived for online sign-ups this month).',
+    faq_tag:'FAQ', faq_h2:'Common questions',
+    faq1_q:'Do I need any English ability to join?',
+    faq1_a:"No! We have classes from complete beginner level. We'll give you a free placement test before your first class so we can put you in the right group.",
+    faq2_q:'Are lessons available online?',
+    faq2_a:"Yes! All of our classes are available online via Zoom. Online students get the same experience, materials, and teacher interaction as in-person students.",
+    faq3_q:'What happens if I miss a lesson?',
+    faq3_a:"Standard and Premium plan students can book make-up lessons. Starter students can purchase make-up credits at ¥2,200 each. We ask for 24-hour notice when possible.",
+    faq4_q:'How do I book the free trial lesson?',
+    faq4_a:'Just fill in the contact form below and select "Free Trial" as the subject. We\'ll email you within 24 hours to confirm your time slot. No payment is needed in advance.',
+    faq5_q:'Can I cancel or change my plan?',
+    faq5_a:"You can upgrade, downgrade, or cancel with one month's notice. There are no long-term contracts — we want students who stay because they love the classes, not because they're locked in.",
+    contact_tag:'Get In Touch',
+    contact_h2:'Book your <span class="text-brand-500">free trial</span> today',
+    contact_sub:"Come and experience what makes SunRise different. No pressure, no commitment — just a fun 60-minute class on us.",
+    contact_loc_label:'Location',
+    contact_loc_addr:'3-chome-1-1 Minatomirai, Nishi Ward<br/>Yokohama, Kanagawa 220-0012',
+    contact_phone_label:'Phone', contact_email_label:'Email', contact_hours_label:'School Hours',
+    contact_hours:'Mon–Fri: 10:00–21:00<br/>Sat–Sun: 9:00–18:00',
+    form_fname:'First Name', form_fname_ph:'Yuki', form_lname:'Last Name', form_lname_ph:'Tanaka',
+    form_email:'Email', form_phone:'Phone (optional)', form_interest:"I'm interested in",
+    form_select:'Select a class...', form_opt_trial:'Free Trial Lesson',
+    form_opt_conv:'General Conversation', form_opt_biz:'Business English',
+    form_opt_kids:'Kids English', form_opt_toeic:'TOEIC Preparation',
+    form_opt_eiken:'Eiken Support', form_opt_private:'Private Lessons',
+    form_message:'Message', form_msg_ph:'Tell us a bit about your English goals...',
+    form_submit:'Send Message', form_success:"✅ Thanks! We'll be in touch within 24 hours.",
+    footer_tagline:'Where every student finds their voice. Native speakers, small classes, and a warm community in Yokohama since 2010.',
+    footer_school:'School', footer_learn:'Learn',
+    footer_about:'About Us', footer_teachers:'Our Teachers',
+    footer_resources:'Free Resources', footer_blog:'Student Blog', footer_trial:'Book a Trial',
+    footer_addr:'3-chome-1-1 Minatomirai<br/>Yokohama, 220-0012',
+    footer_privacy:'Privacy Policy', footer_terms:'Terms of Service',
+    footer_copy:'© 2025 SunRise Eikaiwa. All rights reserved.',
+  },
+  ja: {
+    nav_about:'スクールについて', nav_classes:'クラス', nav_teachers:'講師', nav_pricing:'料金',
+    nav_faq:'よくある質問', nav_contact:'お問い合わせ', nav_trial:'無料体験レッスン',
+    hero_tag:'英会話スクール · Eikaiwa School',
+    hero_h1:'自信を持って<br/><span class="text-brand-500">英語を話そう。</span>',
+    hero_sub:'少人数制クラス、ネイティブスピーカーの講師、アットホームな雰囲気 — SunRise英会話は、あらゆるレベルの生徒が英語で自分を表現できるようサポートします。',
+    hero_cta1:'無料体験を予約する', hero_cta2:'クラスを見る',
+    hero_stat1_label:'在校生数', hero_stat2_label:'ネイティブ講師', hero_stat3_label:'の実績',
+    chat_t1:'おはようございます！週末はどうでしたか？',
+    chat_s1:'最高でした！鎌倉に行きました — 天気も完璧で！',
+    chat_t2:'すごいですね！もっと話しましょう — 何を見ましたか？',
+    chat_placeholder:'返事を入力してください...',
+    marquee_toeic:'⭐ TOEIC対策', marquee_kids:'⭐ キッズ英語', marquee_biz:'⭐ ビジネス英語',
+    marquee_eiken:'⭐ 英検対策', marquee_conv:'⭐ 英会話クラス',
+    marquee_online:'⭐ オンラインレッスン', marquee_private:'⭐ プライベートレッスン',
+    about_tag:'SunRise英会話について', about_stat1:'15年',
+    about_stat1_sub:'日本の英語教育に携わってきた実績', about_stat2_sub:'満足している生徒', about_stat3_sub:'平均評価',
+    about_h2:'<span class="text-brand-500">本物の会話</span>から生まれたスクール',
+    about_p1:'2010年に設立されたSunRise英会話は、「英語を身につける最良の方法は実際に使うこと」という信念から生まれました。すべてのクラスは自然なコミュニケーションを中心に設計されており、教科書通りの暗記学習とは一線を画しています。',
+    about_p2:'少人数制クラス（最大6名）により、十分な発言機会、個別フィードバック、そしてリラックスして学べる環境を提供しています。初心者の方からTOEIC対策まで、あなたに合ったクラスが必ずあります。',
+    about_li1:'米国・英国・カナダ・オーストラリア出身のネイティブ英語講師',
+    about_li2:'グループクラスは最大6名まで',
+    about_li3:'横浜の教室でも、オンラインでも受講可能',
+    about_li4:'新入生向けの無料体験レッスンあり',
+    classes_tag:'プログラム一覧', classes_h2:'あなたにぴったりのクラスを見つけよう',
+    classes_sub:'完全初心者から上級者まで — あらゆるレベルと目標に対応したコースをご用意しています。',
+    tab_all:'すべて', tab_adults:'大人', tab_kids:'子ども', tab_business:'ビジネス', tab_exam:'試験対策',
+    class1_title:'日常英会話',
+    class1_desc:'自然なトピック別ディスカッションを通じて、流暢さと自信を養います。初級〜中級者に最適です。',
+    class1_tag1:'全レベル対応', class1_tag2:'グループ · 最大6名', class1_time:'月・水・金 — 19:00〜20:00',
+    class2_title:'ビジネス英語',
+    class2_desc:'プレゼン・メール・会議・交渉など、実際のビジネスで使える英語を学びます。',
+    class2_tag1:'中級以上', class2_tag2:'グループ · 最大6名', class2_time:'火・木 — 19:00〜20:00',
+    class3_title:'キッズ英語',
+    class3_desc:'歌・ゲーム・物語・工作など、遊びを通じて4〜12歳のお子様が英語を楽しく学べます。',
+    class3_tag1:'4〜12歳対象', class3_tag2:'グループ · 最大6名', class3_time:'土・日 — 10:00 / 11:00 / 13:00',
+    class4_title:'TOEIC対策',
+    class4_desc:'TOEIC L&Rに特化した練習。戦略・語彙・時間制限ドリルでスコアアップを目指します。',
+    class4_tag1:'中級以上', class4_tag2:'グループ · 最大6名', class4_time:'土 — 14:00〜16:00',
+    class5_title:'英検対策',
+    class5_desc:'英検準2級〜1級まで幅広く対応。ネイティブ講師による面接練習も含む充実したプログラムです。',
+    class5_tag1:'全級対応', class5_tag2:'プライベート・グループ', class5_time:'柔軟にスケジュール調整可能',
+    class6_title:'プライベートレッスン',
+    class6_desc:'完全オーダーメイドの1対1レッスン。特定の目標・面接対策・集中的な上達を目指す方に最適。',
+    class6_tag1:'全レベル対応', class6_tag2:'マンツーマン', class6_time:'柔軟にスケジュール調整可能',
+    teachers_tag:'講師紹介', teachers_h2:'担当講師のご紹介',
+    teachers_sub:'全講師は英語ネイティブスピーカーで、正式な教授資格を持ち、生徒の成長を心から応援しています。',
+    teacher1_from:'カリフォルニア出身', teacher1_bio:'CELTA取得 · 日本在住8年 · ハイキングとアニメが好き',
+    teacher2_from:'ロンドン出身',       teacher2_bio:'教育学修士 · 教授経験12年 · お茶が大好き',
+    teacher3_from:'バンクーバー出身',   teacher3_bio:'幼児教育専攻 · 6年 · 料理とJ-POPが好き',
+    teacher4_from:'シドニー出身',       teacher4_bio:'TESOL取得 · 5年 · サーファー＆ゲーマー',
+    test_tag:'生徒の声', test_h2:'生徒さんのレビュー',
+    test1_text:'「SunRiseに入る前は、英語を話すのがとても怖かったです。でも6ヶ月後には職場で英語のプレゼンをしました。先生たちはとても忍耐強く、励ましてくれます！」',
+    test1_role:'看護師 · SunRise歴2年',
+    test2_text:'「息子は英語の授業が嫌いでしたが、今では土曜日が楽しみで仕方ないようです。Emily先生はすべてをゲームにしてくれて、もう3年通っています！」',
+    test2_role:'保護者 · キッズクラス',
+    test3_text:'「James先生のTOEICクラスは本当に実践的です。4ヶ月で640点から845点に上がりました。模擬テストと詳細なフィードバックが大きかったです。」',
+    test3_role:'エンジニア · TOEICクラス',
+    pricing_tag:'シンプルな料金体系', pricing_h2:'明瞭会計、隠れた費用なし',
+    pricing_sub:'全プランに生徒ポータルへのアクセス、レッスン教材、無料レベルチェックテストが含まれます。',
+    per_month:' / 月',
+    plan1_name:'スターター', plan1_desc:'グループレッスン月4回',
+    plan1_li1:'60分グループクラス × 4回', plan1_li2:'生徒ポータルアクセス',
+    plan1_li3:'デジタル教材込み', plan_makeup:'振替レッスン',
+    plan2_name:'スタンダード', plan2_badge:'人気No.1', plan2_desc:'グループレッスン月8回',
+    plan2_li1:'60分グループクラス × 8回', plan2_li2:'生徒ポータルアクセス',
+    plan2_li3:'デジタル教材込み', plan2_li4:'振替レッスン月1回',
+    plan3_name:'プレミアム', plan3_desc:'無制限 + プライベートレッスン',
+    plan3_li1:'グループクラス無制限', plan3_li2:'プライベートレッスン月2回',
+    plan3_li3:'優先スケジュール', plan3_li4:'振替レッスン無制限',
+    pricing_cta:'申し込む',
+    pricing_note:'全料金税込。入会金¥5,500（今月のオンライン入会は免除）。',
+    faq_tag:'よくある質問', faq_h2:'よくある質問',
+    faq1_q:'英語力がなくても入れますか？',
+    faq1_a:'はい、大丈夫です！完全初心者向けのクラスもあります。最初のクラスの前に無料のレベルチェックテストを実施し、適切なグループにご案内します。',
+    faq2_q:'オンラインレッスンはありますか？',
+    faq2_a:'はい！全クラスをZoomでオンライン受講できます。オンライン生徒も対面生徒と同じ体験・教材・講師との交流を楽しめます。',
+    faq3_q:'レッスンを欠席した場合はどうなりますか？',
+    faq3_a:'スタンダード・プレミアムプランの生徒は振替レッスンを予約できます。スターター生徒は¥2,200/回で振替クレジットを購入できます。なるべく24時間前までにご連絡ください。',
+    faq4_q:'無料体験レッスンの予約方法は？',
+    faq4_a:'下記のお問い合わせフォームに入力し、「無料体験レッスン」を選択してください。24時間以内にご希望の時間帯を確認するメールをお送りします。事前のお支払いは不要です。',
+    faq5_q:'プランの変更やキャンセルはできますか？',
+    faq5_a:'1ヶ月前にご連絡いただければ、アップグレード・ダウングレード・解約が可能です。長期契約はありません。好きだから通い続ける、そんな環境を大切にしています。',
+    contact_tag:'お問い合わせ',
+    contact_h2:'<span class="text-brand-500">無料体験</span>を今すぐ予約',
+    contact_sub:'SunRiseの違いをぜひ体験してください。プレッシャーなし、コミットメントなし — 私たちからの60分のプレゼントです。',
+    contact_loc_label:'所在地',
+    contact_loc_addr:'神奈川県横浜市西区みなとみらい3丁目1-1<br/>〒220-0012',
+    contact_phone_label:'電話番号', contact_email_label:'メールアドレス', contact_hours_label:'営業時間',
+    contact_hours:'月〜金: 10:00〜21:00<br/>土・日: 9:00〜18:00',
+    form_fname:'名前（名）', form_fname_ph:'由紀', form_lname:'名前（姓）', form_lname_ph:'田中',
+    form_email:'メールアドレス', form_phone:'電話番号（任意）', form_interest:'興味のあるクラス',
+    form_select:'クラスを選択してください...', form_opt_trial:'無料体験レッスン',
+    form_opt_conv:'日常英会話', form_opt_biz:'ビジネス英語',
+    form_opt_kids:'キッズ英語', form_opt_toeic:'TOEIC対策',
+    form_opt_eiken:'英検対策', form_opt_private:'プライベートレッスン',
+    form_message:'メッセージ', form_msg_ph:'英語学習の目標を教えてください...',
+    form_submit:'送信する', form_success:'✅ ありがとうございます！24時間以内にご連絡いたします。',
+    footer_tagline:'すべての生徒が自分の声を見つける場所。2010年より、横浜でネイティブ講師・少人数制クラス・温かいコミュニティを提供しています。',
+    footer_school:'スクール', footer_learn:'学ぶ',
+    footer_about:'スクールについて', footer_teachers:'講師紹介',
+    footer_resources:'無料教材', footer_blog:'生徒ブログ', footer_trial:'体験予約',
+    footer_addr:'神奈川県横浜市西区みなとみらい3丁目1-1<br/>〒220-0012',
+    footer_privacy:'プライバシーポリシー', footer_terms:'利用規約',
+    footer_copy:'© 2025 SunRise英会話. All rights reserved.',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = translations[lang];
+
+  // Update text content
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  // Update innerHTML (for elements with colored spans etc.)
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // Update placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  // Update lang switcher button styles
+  document.getElementById('lang-en').className = 'px-3 py-1.5 transition-colors ' + (lang === 'en' ? 'lang-btn-active' : 'lang-btn-inactive');
+  document.getElementById('lang-ja').className = 'px-3 py-1.5 transition-colors ' + (lang === 'ja' ? 'lang-btn-active' : 'lang-btn-inactive');
+
+  // Update html lang attribute
+  document.documentElement.lang = lang === 'ja' ? 'ja' : 'en';
+}
+
+// ── MOBILE MENU ──
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobile-menu');
+const burgerOpen = document.getElementById('burger-open');
+const burgerClose = document.getElementById('burger-close');
+burger.addEventListener('click', () => {
+  const isOpen = !mobileMenu.classList.contains('hidden');
+  mobileMenu.classList.toggle('hidden');
+  burgerOpen.classList.toggle('hidden', !isOpen);
+  burgerClose.classList.toggle('hidden', isOpen);
+});
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    mobileMenu.classList.add('hidden');
+    burgerOpen.classList.remove('hidden');
+    burgerClose.classList.add('hidden');
+  });
+});
+
+// ── FADE-IN OBSERVER ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ── BACK TO TOP ──
+const btt = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  btt.classList.toggle('opacity-0', window.scrollY <= 400);
+  btt.classList.toggle('pointer-events-none', window.scrollY <= 400);
+});
+btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+// ── CLASS FILTER TABS ──
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active-tab','bg-brand-500','text-white','shadow');
+      b.classList.add('bg-white','text-gray-600','border','border-gray-200');
+    });
+    btn.classList.add('active-tab','bg-brand-500','text-white','shadow');
+    btn.classList.remove('bg-white','text-gray-600','border','border-gray-200');
+    document.querySelectorAll('.class-card').forEach(card => {
+      card.style.display = (tab === 'all' || card.dataset.category === tab) ? '' : 'none';
+    });
+  });
+});
+
+// ── FAQ ACCORDION ──
+document.querySelectorAll('.faq-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const answer = trigger.nextElementSibling;
+    const icon = trigger.querySelector('.faq-icon');
+    const isOpen = answer.classList.contains('open');
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-icon').forEach(i => i.classList.remove('open'));
+    if (!isOpen) { answer.classList.add('open'); icon.classList.add('open'); }
+  });
+});
+
+// ── CONTACT FORM ──
+const form = document.getElementById('contact-form');
+const successMsg = document.getElementById('form-success');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const btn = form.querySelector('button[type="submit"]');
+  btn.textContent = currentLang === 'ja' ? '送信中...' : 'Sending...';
+  btn.disabled = true;
+  setTimeout(() => { btn.style.display = 'none'; successMsg.classList.remove('hidden'); }, 900);
+});
+</script>
+</body>
+</html>
